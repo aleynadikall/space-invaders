@@ -66,6 +66,9 @@ class Spaceship(pygame.sprite.Sprite):
             bullet_group.add(bullet)
             self.last_shot = time_now
         
+        #update mask
+        self.mask = pygame.mask.from_surface(self.image)
+        
 
         #draw health bar
         pygame.draw.rect(screen, red, (self.rect.x, (self.rect.bottom + 10), self.rect.width, 15))
@@ -86,7 +89,8 @@ class Bullets(pygame.sprite.Sprite):
         self.rect.y -= 5
         if self.rect.bottom < 0:
             self.kill()
-
+        if pygame.sprite.spritecollide(self, alien_group, True):
+            self.kill()
 
 
 
@@ -120,6 +124,10 @@ class Aliens_Bullets(pygame.sprite.Sprite):
         self.rect.y += 2
         if self.rect.top > screen_height:
             self.kill()
+        if pygame.sprite.spritecollide(self, spaceship_group, False, pygame.sprite.collide_mask):
+            self.kill()
+            #reduce spaceship health
+            spaceship.health_remaining -= 1
 
 
 #create sprite groups
